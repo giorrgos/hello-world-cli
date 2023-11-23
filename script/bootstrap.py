@@ -57,18 +57,31 @@ def clean_repository():
 @print_progress
 def check_install(tool, installation_method):
     """Checking if tool is installed with installation_method"""
-    if installation_method not in ["pip", "brew"]:
+    if installation_method != "pip":
         raise ValueError("Installation method not supported")
     try:
         subprocess.check_output([tool, "--version"])
     except OSError:
-        if installation_method == "pip":
-            subprocess.check_call(
-                [sys.executable, "-m", "pip", "install", tool],
-                stdout=subprocess.DEVNULL,
-            )
-        elif installation_method == "brew":
-            subprocess.check_call(["brew", "install", tool], stdout=subprocess.DEVNULL)
+        subprocess.check_call(
+            [sys.executable, "-m", "pip", "install", tool],
+            stdout=subprocess.DEVNULL,
+        )
+
+
+# def check_install(tool, installation_method):
+#    """Checking if tool is installed with installation_method"""
+#    if installation_method not in ["pip", "brew"]:
+#        raise ValueError("Installation method not supported")
+#    try:
+#        subprocess.check_output([tool, "--version"])
+#    except OSError:
+#        if installation_method == "pip":
+#            subprocess.check_call(
+#                [sys.executable, "-m", "pip", "install", tool],
+#                stdout=subprocess.DEVNULL,
+#            )
+#        elif installation_method == "brew":
+#            subprocess.check_call(["brew", "install", tool], stdout=subprocess.DEVNULL)
 
 
 @print_progress
@@ -117,7 +130,7 @@ def main():
     """Main function"""
     clean_repository()
     check_install("poetry", "pip")
-    check_install("pre-commit", "brew")
+    check_install("pre-commit", "pip")
     create_new_poetry_project()
 
 
